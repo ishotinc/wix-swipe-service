@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { AnimatePresence, useAnimationControls } from "framer-motion";
-import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, AlertCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { SwipeCard } from "./SwipeCard";
 import { useSwipeStore } from "@/lib/stores/swipeStore";
 import { usePreferenceStore } from "@/lib/stores/preferenceStore";
+import { useResultStore } from "@/lib/stores/resultStore";
 
 export const SwipeContainer: React.FC = () => {
   const {
@@ -15,10 +17,16 @@ export const SwipeContainer: React.FC = () => {
     swipeRight,
     resetSwipe,
     isComplete,
+    history,
+    preferences,
   } = useSwipeStore();
 
   const { settings } = usePreferenceStore();
+  const { setJobId } = useResultStore();
   const animationControls = useAnimationControls();
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Get current and next few cards for stack effect
   const visibleCards = imageUrls
@@ -91,6 +99,45 @@ export const SwipeContainer: React.FC = () => {
     [swipeLeft, swipeRight]
   );
 
+  // Handle LP generation
+  const handleGenerateLP = useCallback(async () => {
+    try {
+      setError(null);
+      setIsLoading(true);
+      
+      // Validate preferences exist
+      if (!preferences) {
+        throw new Error("Preferences not calculated. Please try swiping again.");
+      }
+      
+      // Call Edge Function to start generation
+      const response = await fetch("/api/generate-lp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          swipeResults: history,
+          preferences: preferences 
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
+      }
+
+      const { jobId } = await response.json();
+      setJobId(jobId);
+
+      // Navigate to generation status page
+      router.push("/generation");
+    } catch (err) {
+      console.error("Error starting LP generation:", err);
+      setError(err instanceof Error ? err.message : "Failed to start LP generation");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [history, preferences, setJobId, router]);
+
   if (isComplete()) {
     return (
       <div className="flex flex-col items-center justify-center h-full">
@@ -98,13 +145,28 @@ export const SwipeContainer: React.FC = () => {
         <p className="text-gray-600 mb-8">
           You've swiped through all the sites. Ready to generate your landing page?
         </p>
-        <button
-          onClick={resetSwipe}
-          className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <RotateCcw className="w-5 h-5" />
-          Start Over
-        </button>
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+            <p className="text-red-700">{error}</p>
+          </div>
+        )}
+        <div className="flex gap-4">
+          <button
+            onClick={handleGenerateLP}
+            disabled={isLoading}
+            className="flex items-center gap-2 px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? "Generating..." : "Generate LP"}
+          </button>
+          <button
+            onClick={resetSwipe}
+            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <RotateCcw className="w-5 h-5" />
+            Start Over
+          </button>
+        </div>
       </div>
     );
   }
@@ -136,11 +198,7 @@ export const SwipeContainer: React.FC = () => {
               site={card}
               isActive={index === visibleCards.length - 1}
               onSwipe={handleSwipe}
-              animationControls={
-                index === visibleCards.length - 1
-                  ? animationControls
-                  : useAnimationControls()
-              }
+              animationControls={animationControls}
             />
           ))}
         </AnimatePresence>

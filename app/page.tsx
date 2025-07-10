@@ -7,18 +7,24 @@ import { useSwipeStore } from "@/lib/stores/swipeStore";
 import { Sparkles, ArrowRight } from "lucide-react";
 
 export default function Home() {
-  const [showSwiper, setShowSwiper] = useState(false);
+  const [currentScreen, setCurrentScreen] = useState<'landing' | 'swiper'>('landing');
   const { resetSwipe } = useSwipeStore();
 
   const handleStartSwiping = () => {
     resetSwipe();
-    setShowSwiper(true);
+    setCurrentScreen('swiper');
+  };
+
+  // Remove auto-navigation to generation screen
+
+  const handleReset = () => {
+    setCurrentScreen('landing');
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <AnimatePresence mode="wait">
-        {!showSwiper ? (
+        {currentScreen === 'landing' && (
           <motion.div
             key="landing"
             initial={{ opacity: 0 }}
@@ -124,7 +130,9 @@ export default function Home() {
               </motion.div>
             </div>
           </motion.div>
-        ) : (
+        )}
+        
+        {currentScreen === 'swiper' && (
           <motion.div
             key="swiper"
             initial={{ opacity: 0, scale: 0.95 }}
@@ -138,6 +146,7 @@ export default function Home() {
             </div>
           </motion.div>
         )}
+
       </AnimatePresence>
     </div>
   );
