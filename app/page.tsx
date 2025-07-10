@@ -1,103 +1,144 @@
-import Image from "next/image";
+"use client";
+
+import React, { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { SwipeContainer } from "./components/SwipeContainer";
+import { useSwipeStore } from "@/lib/stores/swipeStore";
+import { Sparkles, ArrowRight } from "lucide-react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [showSwiper, setShowSwiper] = useState(false);
+  const { resetSwipe } = useSwipeStore();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const handleStartSwiping = () => {
+    resetSwipe();
+    setShowSwiper(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <AnimatePresence mode="wait">
+        {!showSwiper ? (
+          <motion.div
+            key="landing"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center justify-center min-h-screen p-8"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            {/* Hero Section */}
+            <div className="max-w-3xl text-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                className="inline-flex items-center justify-center w-20 h-20 mb-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full"
+              >
+                <Sparkles className="w-10 h-10 text-white" />
+              </motion.div>
+
+              <motion.h1
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="text-5xl md:text-6xl font-bold text-gray-900 mb-6"
+              >
+                Create Your Perfect
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                  {" "}Landing Page
+                </span>
+              </motion.h1>
+
+              <motion.p
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="text-xl text-gray-600 mb-12 leading-relaxed"
+              >
+                Swipe through beautiful Wix site designs and let AI generate
+                a custom landing page tailored to your preferences.
+              </motion.p>
+
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="space-y-4"
+              >
+                <button
+                  onClick={handleStartSwiping}
+                  className="group inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-semibold rounded-full hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                >
+                  Start Swiping
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+
+                <div className="text-sm text-gray-500">
+                  10 curated designs • 5 seconds to generate • 100% free
+                </div>
+              </motion.div>
+
+              {/* Feature Cards */}
+              <motion.div
+                initial={{ y: 40, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6"
+              >
+                <div className="bg-white p-6 rounded-xl shadow-md">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                    <span className="text-2xl">👆</span>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    Simple Swiping
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    Like or dislike designs with intuitive swipe gestures
+                  </p>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow-md">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                    <span className="text-2xl">🤖</span>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    AI-Powered
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    Advanced AI analyzes your preferences instantly
+                  </p>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow-md">
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                    <span className="text-2xl">⚡</span>
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    Ready in Seconds
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    Get your custom landing page code in under 5 seconds
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="swiper"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="min-h-screen p-8 flex items-center justify-center"
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            <div className="w-full max-w-4xl">
+              <SwipeContainer />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
