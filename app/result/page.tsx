@@ -14,7 +14,7 @@ export default function ResultPage() {
 
   // Redirect if no result is available
   useEffect(() => {
-    if (!generatedCode && status !== 'generating') {
+    if (!generatedCode && status !== "generating") {
       router.push("/");
     }
   }, [generatedCode, status, router]);
@@ -42,15 +42,15 @@ export default function ResultPage() {
   };
 
   const handleTryAgain = async () => {
-    console.log('[ResultPage] Try Again clicked');
-    
+    console.log("[ResultPage] Try Again clicked");
+
     // 1. Reset stores completely
     reset();
     resetSwipe();
-    
+
     // 2. Wait for reset to complete
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     // 3. Navigate to home
     await router.push("/");
   };
@@ -60,7 +60,7 @@ export default function ResultPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white p-4">
       {/* Try Again Button - Fixed Position */}
       <div className="fixed top-4 right-4 z-20">
         <button
@@ -97,11 +97,17 @@ export default function ResultPage() {
         </button>
       </div>
 
-      {/* Full Screen LP Display */}
-      <div className="w-full h-screen">
+      {/* Simple Preview Frame */}
+      <div className="border border-gray-300 rounded">
+        {/* Preview Header */}
+        <div className="px-4 py-2 border-b border-gray-300 bg-gray-50">
+          <span className="text-sm font-medium text-gray-700">Preview</span>
+        </div>
+
+        {/* LP Content */}
         <iframe
           srcDoc={generatedCode}
-          className="w-full h-full"
+          className="w-full h-[calc(100vh-120px)]"
           title="Generated Landing Page"
           sandbox="allow-scripts"
         />
