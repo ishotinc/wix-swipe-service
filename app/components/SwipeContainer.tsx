@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useState, useMemo } from "react";
 import { AnimatePresence, useAnimationControls } from "framer-motion";
 import { ChevronLeft, ChevronRight, RotateCcw, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -26,12 +26,19 @@ export const SwipeContainer: React.FC = () => {
   const animationControls = useAnimationControls();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [hasTriggeredGeneration, setHasTriggeredGeneration] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  // Get current and next few cards for stack effect
-  const visibleCards = imageUrls
-    .slice(currentIndex, currentIndex + 3)
-    .reverse(); // Reverse to render top card last
+  // Get current and next few cards for stack effect - 安全な境界処理
+  const visibleCards = useMemo(() => {
+    const startIndex = currentIndex;
+    const endIndex = Math.min(currentIndex + 3, imageUrls.length);
+    const cards = imageUrls.slice(startIndex, endIndex);
+    
+    console.log(`VisibleCards: showing ${cards.length} cards from index ${startIndex}`);
+    
+    return cards.reverse(); // Reverse to render top card last
+  }, [imageUrls, currentIndex]);
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -90,27 +97,41 @@ export const SwipeContainer: React.FC = () => {
   // Handle swipe from card
   const handleSwipe = useCallback(
     (direction: "left" | "right") => {
-      if (direction === "left") {
-        swipeLeft();
-      } else {
-        swipeRight();
+      console.log(`HandleSwipe: ${direction} at ${currentIndex}/${imageUrls.length}`);
+      
+      if (currentIndex >= imageUrls.length) {
+        console.error('HandleSwipe: Beyond bounds, stopping');
+        return;
+      }
+      
+      try {
+        if (direction === "left") {
+          swipeLeft();
+        } else {
+          swipeRight();
+        }
+      } catch (error) {
+        console.error('Swipe execution error:', error);
       }
     },
-    [swipeLeft, swipeRight]
+    [swipeLeft, swipeRight, currentIndex, imageUrls.length]
   );
 
   // Handle LP generation
   const handleGenerateLP = useCallback(async () => {
     try {
       setError(null);
-      setIsLoading(true);
       
       // Validate preferences exist
       if (!preferences) {
         throw new Error("Preferences not calculated. Please try swiping again.");
       }
       
-      // Call Edge Function to start generation
+      // 1. First reset the result store to ensure clean state
+      const { reset } = useResultStore.getState();
+      reset();
+      
+      // 2. Call API to start generation
       const response = await fetch("/api/generate-lp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -126,47 +147,47 @@ export const SwipeContainer: React.FC = () => {
       }
 
       const { jobId } = await response.json();
+      
+      // 3. Set jobId in store
       setJobId(jobId);
-
-      // Navigate to generation status page
-      router.push("/generation");
+      
     } catch (err) {
       console.error("Error starting LP generation:", err);
       setError(err instanceof Error ? err.message : "Failed to start LP generation");
-    } finally {
-      setIsLoading(false);
+      // Navigate back to home on error
+      router.push('/');
     }
   }, [history, preferences, setJobId, router]);
 
-  if (isComplete()) {
+  // Auto-trigger generation when swipe is complete
+  useEffect(() => {
+    const startGeneration = async () => {
+      if (isComplete() && !hasTriggeredGeneration) {
+        console.log('[SwipeContainer] Swipe complete, starting generation');
+        setHasTriggeredGeneration(true);
+        setIsGenerating(true);
+        
+        try {
+          // First trigger LP generation and wait for jobId
+          await handleGenerateLP();
+          // Only navigate after we have jobId
+          console.log('[SwipeContainer] Generation started, navigating to generation page');
+          router.push('/generation');
+        } catch (error) {
+          console.error('[SwipeContainer] Failed to start generation:', error);
+          setIsGenerating(false);
+        }
+      }
+    };
+    
+    startGeneration();
+  }, [isComplete, hasTriggeredGeneration, handleGenerateLP, router]);
+
+  // Show minimal loading state while generating
+  if (isComplete() || isGenerating) {
     return (
-      <div className="flex flex-col items-center justify-center h-full">
-        <h2 className="text-3xl font-bold mb-4">All done!</h2>
-        <p className="text-gray-600 mb-8">
-          You've swiped through all the sites. Ready to generate your landing page?
-        </p>
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-            <p className="text-red-700">{error}</p>
-          </div>
-        )}
-        <div className="flex gap-4">
-          <button
-            onClick={handleGenerateLP}
-            disabled={isLoading}
-            className="flex items-center gap-2 px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? "Generating..." : "Generate LP"}
-          </button>
-          <button
-            onClick={resetSwipe}
-            className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <RotateCcw className="w-5 h-5" />
-            Start Over
-          </button>
-        </div>
+      <div className="flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -194,7 +215,7 @@ export const SwipeContainer: React.FC = () => {
         <AnimatePresence>
           {visibleCards.map((card, index) => (
             <SwipeCard
-              key={card.id}
+              key={`swipe_${card.id}_${currentIndex}_${index}`}
               site={card}
               isActive={index === visibleCards.length - 1}
               onSwipe={handleSwipe}

@@ -10,9 +10,25 @@ export const useSwipeStore = create<SwipeStore>((set, get) => ({
 
   swipeRight: () => {
     const { currentIndex, imageUrls, history } = get();
-    if (currentIndex >= imageUrls.length) return;
-
+    
+    // 詳細ログ追加
+    console.log(`SwipeRight: currentIndex=${currentIndex}, total=${imageUrls.length}`);
+    
+    // 厳密な境界チェック
+    if (currentIndex >= imageUrls.length) {
+      console.warn('SwipeRight: Already at end, stopping');
+      return;
+    }
+    
+    // 現在画像の存在確認
     const currentImage = imageUrls[currentIndex];
+    if (!currentImage) {
+      console.error(`SwipeRight: No image at index ${currentIndex}`);
+      return;
+    }
+    
+    console.log(`Processing: ${currentImage.name} (${currentIndex + 1}/${imageUrls.length})`);
+
     const action: SwipeAction = {
       imageId: currentImage.id,
       action: 'like',
@@ -23,10 +39,13 @@ export const useSwipeStore = create<SwipeStore>((set, get) => ({
       elements: currentImage.elements,
     };
 
+    const newIndex = currentIndex + 1;
     set({
       history: [...history, action],
-      currentIndex: currentIndex + 1,
+      currentIndex: newIndex,
     });
+    
+    console.log(`SwipeRight completed: newIndex=${newIndex}`);
 
     // Update preferences after each swipe
     get().updatePreferences();
@@ -34,9 +53,25 @@ export const useSwipeStore = create<SwipeStore>((set, get) => ({
 
   swipeLeft: () => {
     const { currentIndex, imageUrls, history } = get();
-    if (currentIndex >= imageUrls.length) return;
-
+    
+    // 詳細ログ追加
+    console.log(`SwipeLeft: currentIndex=${currentIndex}, total=${imageUrls.length}`);
+    
+    // 厳密な境界チェック
+    if (currentIndex >= imageUrls.length) {
+      console.warn('SwipeLeft: Already at end, stopping');
+      return;
+    }
+    
+    // 現在画像の存在確認
     const currentImage = imageUrls[currentIndex];
+    if (!currentImage) {
+      console.error(`SwipeLeft: No image at index ${currentIndex}`);
+      return;
+    }
+    
+    console.log(`Processing: ${currentImage.name} (${currentIndex + 1}/${imageUrls.length})`);
+
     const action: SwipeAction = {
       imageId: currentImage.id,
       action: 'dislike',
@@ -47,10 +82,13 @@ export const useSwipeStore = create<SwipeStore>((set, get) => ({
       elements: currentImage.elements,
     };
 
+    const newIndex = currentIndex + 1;
     set({
       history: [...history, action],
-      currentIndex: currentIndex + 1,
+      currentIndex: newIndex,
     });
+    
+    console.log(`SwipeLeft completed: newIndex=${newIndex}`);
 
     // Update preferences after each swipe
     get().updatePreferences();

@@ -22,12 +22,25 @@ export const useResultStore = create<ResultStore>((set) => ({
   },
 
   setResult: (code: string, templateName: string) => {
-    set({
-      generatedCode: code,
-      templateName,
-      status: 'completed',
-      progress: 100,
-      error: null,
+    set((state) => {
+      // Prevent duplicate results
+      if (state.generatedCode === code && state.status === 'completed') {
+        console.log('[ResultStore] Duplicate result ignored');
+        return state;
+      }
+      
+      console.log('[ResultStore] Setting new result:', { 
+        templateName, 
+        codeLength: code.length 
+      });
+      
+      return {
+        generatedCode: code,
+        templateName,
+        status: 'completed',
+        progress: 100,
+        error: null,
+      };
     });
   },
 
@@ -42,6 +55,7 @@ export const useResultStore = create<ResultStore>((set) => ({
   },
 
   reset: () => {
+    console.log('[ResultStore] Resetting store');
     set({
       generatedCode: null,
       status: 'idle',
