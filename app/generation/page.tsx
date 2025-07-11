@@ -7,7 +7,8 @@ import { useGeneration } from "@/lib/hooks/useGeneration";
 import { Loader2 } from "lucide-react";
 
 const PROGRESS_STAGES = {
-  started: { progress: 0, message: "Initializing generation process..." },
+  idle: { progress: 0, message: "Initializing generation process..." },
+  pending: { progress: 10, message: "Starting generation process..." },
   analyzing: { progress: 25, message: "Analyzing your design preferences..." },
   selecting: { progress: 40, message: "Selecting optimal template..." },
   generating: { progress: 70, message: "Generating custom content with AI..." },
@@ -20,12 +21,12 @@ export default function GenerationPage() {
   const router = useRouter();
   const { jobId, status: storeStatus, generatedCode } = useResultStore();
   const { status, error } = useGeneration();
-  const [currentStage, setCurrentStage] = useState(PROGRESS_STAGES.started);
+  const [currentStage, setCurrentStage] = useState(PROGRESS_STAGES.idle);
 
   // Update progress stage based on status
   useEffect(() => {
-    if (status && PROGRESS_STAGES[status]) {
-      setCurrentStage(PROGRESS_STAGES[status]);
+    if (status && status in PROGRESS_STAGES) {
+      setCurrentStage(PROGRESS_STAGES[status as keyof typeof PROGRESS_STAGES]);
     }
   }, [status]);
 

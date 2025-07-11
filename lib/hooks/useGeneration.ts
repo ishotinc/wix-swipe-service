@@ -93,9 +93,16 @@ export function useGeneration() {
           break;
 
         case 'pending':
-        case 'processing':
         case 'generating':
           // Continue polling
+          setTimeout(() => {
+            pollStatus(jobId, attempts + 1);
+          }, POLLING_INTERVAL);
+          break;
+          
+        default:
+          // Handle any other status (like 'processing') as generating
+          setStatus('generating');
           setTimeout(() => {
             pollStatus(jobId, attempts + 1);
           }, POLLING_INTERVAL);

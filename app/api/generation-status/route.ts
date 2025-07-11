@@ -38,9 +38,12 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // Map job status to expected response status
+    const mappedStatus = jobData.status === 'processing' ? 'generating' : jobData.status;
+    
     // Return status response
     const response: GenerationStatusResponse = {
-      status: jobData.status,
+      status: mappedStatus as GenerationStatusResponse['status'],
       progress: jobData.progress,
     };
 

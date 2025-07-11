@@ -120,6 +120,7 @@ export interface SwipeStore {
   resetSwipe: () => void;
   isComplete: () => boolean;
   updatePreferences: () => void;
+  finalizePreferences?: () => void;
 }
 
 // Result store interface
