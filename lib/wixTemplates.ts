@@ -1,7 +1,9 @@
 import { Template } from "@/types";
+import { premiumAITemplate } from "./premiumTemplate";
 
-// 5 pre-built templates with variable system
+// 6 pre-built templates with variable system (including premium)
 export const wixTemplates: Template[] = [
+  premiumAITemplate, // Premium template as first option
   {
     id: "minimal-portfolio",
     name: "Minimal Portfolio",
