@@ -116,7 +116,7 @@ function createPrompt(template: Template, preferences: UserPreferences): string 
     animationStyle = 'morphing';
   }
   
-  return `Create a modern, high-impact landing page with these specifications:
+  return `Create a bold, Google-inspired landing page with these specifications:
 
 User Preferences (from swipe analysis):
 - Liked sites: ${likedSites}
@@ -127,13 +127,15 @@ User Preferences (from swipe analysis):
 Template: ${template.name}
 Required Variables: ${template.variables.join(', ')}
 
-DESIGN REQUIREMENTS:
-1. Use a futuristic, digital design with glassmorphism effects
-2. Dark theme with blue color palette (#0066ff, #00ccff, #4d94ff)
-3. Hero section with transparent header and company name in top-left
-4. Prominent CTA button with micro-interactions
-5. Background animation style: ${animationStyle}
-6. All sections: Hero, Problem, Solution, Results, CTA, Profile, FAQ, Footer
+DESIGN REQUIREMENTS - FOLLOW EXACTLY:
+1. Google-inspired bold design with high visual impact
+2. Use Google colors: #4285f4 (blue), #ea4335 (red), #fbbc04 (yellow), #34a853 (green)
+3. White/light backgrounds (#ffffff, #f8f9fa) for content areas
+4. Text colors: #202124 (primary) and #5f6368 (secondary)
+5. Glassmorphism effects with light theme (frosted glass cards, glowing borders)
+6. Large, bold, uppercase titles with Google color gradients
+7. teaser2.jpg as background with light overlay
+8. All sections: Hero, Problem, Solution, Results, CTA, Profile, FAQ, Footer
 
 Generate professional content that:
 - Matches the user's industry and style preferences
@@ -170,10 +172,10 @@ function generateFallbackVariables(template: Template): Record<string, string> {
     heroTitle: 'Transform Your Business',
     heroTitleLine2: 'With AI Innovation',
     heroSubtitle: 'Cutting-edge solutions that drive growth and efficiency',
-    primaryColor: '#0066ff',
+    primaryColor: '#4285f4',
     backgroundColor: '#FFFFFF',
-    secondaryColor: '#F3F4F6',
-    accentColor: '#00ccff',
+    secondaryColor: '#F8F9FA',
+    accentColor: '#ea4335',
     ctaButtonText: 'Get Started',
     ctaLink: '#',
     companyName: 'Your Company',

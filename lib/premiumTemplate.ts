@@ -54,7 +54,7 @@ export const premiumAITemplate: Template = {
     "faq3Question",
     "faq3Answer",
     
-    // Colors
+    // Colors (not used - hardcoded Google colors)
     "primaryColor",
     "accentColor"
   ],
@@ -77,11 +77,23 @@ export const premiumAITemplate: Template = {
     <style>{{{css}}}</style>
 </head>
 <body>
+    <!-- Animated Mesh Gradient Overlay -->
+    <div class="mesh-gradient"></div>
+    
+    <!-- Floating Geometric Shapes -->
+    <div class="floating-shapes">
+        <div class="shape shape-circle" style="top: 10%; left: 5%;"></div>
+        <div class="shape shape-square" style="top: 20%; right: 10%;"></div>
+        <div class="shape shape-triangle" style="bottom: 30%; left: 15%;"></div>
+        <div class="shape shape-circle" style="bottom: 10%; right: 20%;"></div>
+        <div class="shape shape-blob" style="top: 50%; left: 80%;"></div>
+    </div>
+    
     <!-- Hero Section -->
     <header class="hero">
         <div class="hero-bg">
             <div class="hero-overlay"></div>
-            <canvas id="network-animation"></canvas>
+            <canvas id="particle-animation"></canvas>
         </div>
         <nav class="hero-nav">
             <div class="container">
@@ -276,7 +288,7 @@ export const premiumAITemplate: Template = {
     <script>{{{js}}}</script>
 </body>
 </html>`,
-  css: `/* Premium AI Tech CSS - Glassmorphism & Modern Effects */
+  css: `/* Premium AI Tech CSS - Google-Inspired Bold Design */
 * {
     margin: 0;
     padding: 0;
@@ -284,15 +296,24 @@ export const premiumAITemplate: Template = {
 }
 
 :root {
-    --primary-blue: {{primaryColor}};
-    --dark-blue: #001a33;
-    --light-blue: #4d94ff;
-    --accent-blue: {{accentColor}};
-    --text-primary: #ffffff;
-    --text-secondary: #b3d9ff;
-    --bg-dark: #000d1a;
-    --glass-bg: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    /* Google Colors */
+    --google-blue: #4285f4;
+    --google-red: #ea4335;
+    --google-yellow: #fbbc04;
+    --google-green: #34a853;
+    
+    /* Text Colors */
+    --text-primary: #202124;
+    --text-secondary: #5f6368;
+    
+    /* Backgrounds */
+    --bg-white: #ffffff;
+    --bg-light: #f8f9fa;
+    
+    /* Glassmorphism for light theme */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.9);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 html {
@@ -300,9 +321,9 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: var(--text-primary);
-    background-color: var(--bg-dark);
+    background-color: var(--bg-white);
     line-height: 1.6;
     overflow-x: hidden;
 }
@@ -311,6 +332,116 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+}
+
+/* Animated Mesh Gradient */
+.mesh-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(66, 133, 244, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(234, 67, 53, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(251, 188, 4, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 10%, rgba(52, 168, 83, 0.4) 0%, transparent 50%);
+    z-index: 2;
+    opacity: 0.6;
+    animation: meshMove 20s ease-in-out infinite;
+    pointer-events: none;
+    mix-blend-mode: multiply;
+}
+
+@keyframes meshMove {
+    0%, 100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    25% {
+        transform: translate(-10%, -10%) scale(1.2) rotate(90deg);
+    }
+    50% {
+        transform: translate(10%, -10%) scale(0.8) rotate(180deg);
+    }
+    75% {
+        transform: translate(-10%, 10%) scale(1.1) rotate(270deg);
+    }
+}
+
+/* Floating Geometric Shapes */
+.floating-shapes {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.6;
+    animation: float 20s ease-in-out infinite;
+}
+
+.shape-circle {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--google-blue), var(--google-red));
+    border-radius: 50%;
+    filter: blur(1px);
+}
+
+.shape-square {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--google-yellow), var(--google-green));
+    border-radius: 15px;
+    transform: rotate(45deg);
+    filter: blur(1px);
+}
+
+.shape-triangle {
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-bottom: 70px solid var(--google-red);
+    filter: blur(1px);
+}
+
+.shape-blob {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--google-green), var(--google-blue));
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    filter: blur(2px);
+    animation: blob 8s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) translateX(0) scale(1);
+    }
+    25% {
+        transform: translateY(-30px) translateX(20px) scale(1.1);
+    }
+    50% {
+        transform: translateY(20px) translateX(-20px) scale(0.9);
+    }
+    75% {
+        transform: translateY(-20px) translateX(30px) scale(1.05);
+    }
+}
+
+@keyframes blob {
+    0%, 100% {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    }
+    50% {
+        border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+    }
 }
 
 /* Hero Section */
@@ -351,19 +482,20 @@ body {
     width: 100%;
     height: 100%;
     background: linear-gradient(135deg, 
-        rgba(0, 13, 26, 0.9) 0%, 
-        rgba(0, 26, 51, 0.7) 50%, 
-        rgba(0, 13, 26, 0.9) 100%);
-    backdrop-filter: blur(3px);
+        rgba(255, 255, 255, 0.85) 0%, 
+        rgba(248, 249, 250, 0.7) 50%, 
+        rgba(255, 255, 255, 0.85) 100%);
+    backdrop-filter: blur(2px);
 }
 
-#network-animation {
+#particle-animation {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0.3;
+    opacity: 0.5;
+    z-index: 1;
 }
 
 .hero-nav {
@@ -375,10 +507,26 @@ body {
 .logo {
     font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
-    background: linear-gradient(135deg, var(--light-blue), var(--accent-blue));
+    background: linear-gradient(90deg, 
+        var(--google-blue) 0%, 
+        var(--google-red) 25%, 
+        var(--google-yellow) 50%, 
+        var(--google-green) 75%,
+        var(--google-blue) 100%);
+    background-size: 200% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: googleGradientFlow 4s linear infinite;
+}
+
+@keyframes googleGradientFlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 200% 50%;
+    }
 }
 
 .hero-content {
@@ -391,10 +539,12 @@ body {
 }
 
 .hero-title {
-    font-size: clamp(2rem, 6vw, 4rem);
-    font-weight: 700;
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 900;
     margin-bottom: 1.5rem;
     line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
 }
 
 .title-line {
@@ -402,6 +552,11 @@ body {
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 0.8s ease forwards;
+    position: relative;
+    text-shadow: 
+        0 2px 4px rgba(0,0,0,0.1),
+        0 4px 8px rgba(0,0,0,0.08),
+        0 8px 16px rgba(0,0,0,0.06);
 }
 
 .title-line:nth-child(2) {
@@ -409,20 +564,30 @@ body {
 }
 
 .gradient-text {
-    background: linear-gradient(135deg, var(--light-blue), var(--accent-blue));
+    background: linear-gradient(90deg, 
+        var(--google-blue) 0%, 
+        var(--google-red) 25%, 
+        var(--google-yellow) 50%, 
+        var(--google-green) 75%,
+        var(--google-blue) 100%);
+    background-size: 200% 100%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    animation: googleGradientFlow 3s linear infinite;
+    filter: drop-shadow(0 0 20px rgba(66, 133, 244, 0.3));
 }
 
 .hero-subtitle {
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
     color: var(--text-secondary);
     max-width: 600px;
     margin: 0 auto 2rem;
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s ease 0.4s forwards;
+    font-weight: 400;
+    line-height: 1.6;
 }
 
 /* CTA Button */
@@ -430,24 +595,52 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem 2.5rem;
-    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    padding: 1.25rem 3rem;
+    background: linear-gradient(90deg, var(--google-blue), var(--google-red));
     color: white;
     text-decoration: none;
     border-radius: 50px;
-    font-weight: 600;
+    font-weight: 700;
     font-size: clamp(1rem, 2vw, 1.125rem);
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
     opacity: 0;
     transform: translateY(20px);
     animation: fadeInUp 0.8s ease 0.6s forwards;
+    box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
 }
 
 .cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(0, 102, 255, 0.4);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(66, 133, 244, 0.4),
+                0 15px 40px rgba(234, 67, 53, 0.3);
+}
+
+.cta-button:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Magnetic effect container */
+.cta-button-wrapper {
+    display: inline-block;
+    position: relative;
 }
 
 .cta-glow {
@@ -456,9 +649,10 @@ body {
     left: 50%;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(66,133,244,0.4) 0%, transparent 70%);
     transform: translate(-50%, -50%) scale(0);
     transition: transform 0.6s ease;
+    pointer-events: none;
 }
 
 .cta-button:hover .cta-glow {
@@ -472,16 +666,25 @@ section {
 }
 
 .section-title {
-    font-size: clamp(2rem, 4vw, 3rem);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
     text-align: center;
     margin-bottom: 3rem;
     opacity: 0;
     transform: translateY(30px);
+    font-weight: 900;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, var(--google-blue), var(--google-red));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Problem Section */
 .problem-section {
-    background: linear-gradient(180deg, var(--bg-dark) 0%, rgba(0, 26, 51, 0.3) 100%);
+    background: var(--bg-white);
+    position: relative;
 }
 
 .problem-grid {
@@ -493,35 +696,66 @@ section {
 
 .problem-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
-    padding: 2rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 2.5rem;
     text-align: center;
     opacity: 0;
     transform: translateY(30px);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+    box-shadow: var(--glass-shadow);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.problem-card::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(90deg, var(--google-blue), var(--google-red), var(--google-yellow), var(--google-green));
+    border-radius: 24px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
 }
 
 .problem-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 102, 255, 0.1);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.problem-card:hover::before {
+    opacity: 0.5;
 }
 
 .card-icon {
     font-size: 3rem;
     margin-bottom: 1rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 .problem-card h3 {
-    font-size: 1.5rem;
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
     margin-bottom: 1rem;
-    color: var(--light-blue);
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.problem-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
 }
 
 /* Solution Section */
 .solution-section {
-    background: transparent;
+    background: var(--bg-light);
     position: relative;
 }
 
@@ -561,15 +795,31 @@ section {
 .float-card {
     position: absolute;
     background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid var(--glass-border);
+    border-radius: 24px;
     padding: 2rem;
     font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--light-blue);
+    font-weight: 700;
+    color: var(--text-primary);
     opacity: 0;
-    animation: float 6s ease-in-out infinite;
+    animation: floatCard 6s ease-in-out infinite;
+    box-shadow: var(--glass-shadow);
+    background: linear-gradient(135deg, 
+        rgba(66, 133, 244, 0.1), 
+        rgba(234, 67, 53, 0.1));
+}
+
+@keyframes floatCard {
+    0%, 100% {
+        opacity: 0.8;
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-20px) rotate(5deg);
+    }
 }
 
 .card-1 {
@@ -896,7 +1146,51 @@ section {
         transition: none !important;
     }
 }`,
-  js: `// Network Animation on Canvas
+  js: `// 3D Tilt Effect for Cards
+function initTiltEffect() {
+    const cards = document.querySelectorAll('.problem-card, .stat-card, .faq-item');
+    
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            
+            card.style.transform = \`perspective(1000px) rotateX(\${rotateX}deg) rotateY(\${rotateY}deg) scale(1.02)\`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+        });
+    });
+}
+
+// Magnetic Button Effect
+function initMagneticButtons() {
+    const buttons = document.querySelectorAll('.cta-button');
+    
+    buttons.forEach(button => {
+        button.addEventListener('mousemove', (e) => {
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            button.style.transform = \`translate(\${x * 0.3}px, \${y * 0.3}px) scale(1.05)\`;
+        });
+        
+        button.addEventListener('mouseleave', () => {
+            button.style.transform = 'translate(0, 0) scale(1)';
+        });
+    });
+}
+
+// Network Animation on Canvas
 class NetworkAnimation {
     constructor(canvas) {
         this.canvas = canvas;
@@ -946,10 +1240,11 @@ class NetworkAnimation {
             if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
             if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
 
-            // Draw particle
+            // Draw particle with Google colors
             this.ctx.beginPath();
             this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-            this.ctx.fillStyle = 'rgba(0, 204, 255, 0.8)';
+            const colors = ['rgba(66, 133, 244, 0.8)', 'rgba(234, 67, 53, 0.8)', 'rgba(251, 188, 4, 0.8)', 'rgba(52, 168, 83, 0.8)'];
+            this.ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
             this.ctx.fill();
         });
 
@@ -964,7 +1259,7 @@ class NetworkAnimation {
                     this.ctx.beginPath();
                     this.ctx.moveTo(this.particles[i].x, this.particles[i].y);
                     this.ctx.lineTo(this.particles[j].x, this.particles[j].y);
-                    this.ctx.strokeStyle = \`rgba(0, 204, 255, \${0.2 * (1 - distance / 150)})\`;
+                    this.ctx.strokeStyle = \`rgba(66, 133, 244, \${0.3 * (1 - distance / 150)})\`;
                     this.ctx.lineWidth = 1;
                     this.ctx.stroke();
                 }
@@ -977,10 +1272,14 @@ class NetworkAnimation {
 
 // Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.getElementById('network-animation');
+    const canvas = document.getElementById('particle-animation');
     if (canvas) {
         new NetworkAnimation(canvas);
     }
+    
+    // Initialize interactive effects
+    initTiltEffect();
+    initMagneticButtons();
 
     // Intersection Observer for scroll animations
     const observerOptions = {
